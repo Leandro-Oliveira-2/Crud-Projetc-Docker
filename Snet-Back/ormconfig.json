@@ -1,0 +1,20 @@
+[
+    {
+      "name": "default",
+      "type": "postgres",
+      "host": "172.21.0.2",
+      "port": 5430,
+      "username": "postgres",
+      "password": "124578pz",
+      "database": "snet",
+      "schema": "public",
+      "synchronize": false,
+      "logging": false,
+      "migrations": ["./src/config/migrations/**.ts"],
+      "entities": ["./src/modules/**/infra/typeorm/entities/**.ts"],
+      "cli": {
+        "migrationsDir": "./src/config/migrations/"
+      }
+    }
+  ]
+  

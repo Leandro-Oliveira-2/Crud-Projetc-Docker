@@ -1,0 +1,94 @@
+<template>
+  <div>
+    <h1>Cadastrar Usuário</h1>
+    <form @submit.prevent="submitForm">
+      <div>
+        <label for="name">Nome:</label>
+        <input type="text" id="name" v-model="userData.name" required />
+      </div>
+      <div>
+        <label for="gender">Gênero:</label>
+        <select id="gender" v-model="userData.gender" required>
+          <option value="MASCULINO">Masculino</option>
+          <option value="FEMININO">Feminino</option>
+          <option value="OUTROS">Outros</option>
+        </select>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" v-model="userData.email" required />
+      </div>
+      <div>
+        <label for="phone">Telefone:</label>
+        <input type="tel" id="phone" v-model="userData.phone" required />
+      </div>
+      <div>
+        <label for="address">Endereço:</label>
+        <input type="text" id="address" v-model="userData.address" required />
+      </div>
+      <div>
+        <label for="secret">Senha:</label>
+        <input type="password" id="secret" v-model="userData.secret" required />
+      </div>
+      <div>
+        <label for="saldo">Saldo:</label>
+        <input type="number" id="saldo" v-model.number="userData.saldo" required />
+      </div>
+      <button type="submit">Cadastrar</button>
+    </form>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      userData: {
+        name: '',
+        gender: '',
+        email: '',
+        phone: '',
+        address: '',
+        secret: '',
+        saldo: null,
+      },
+    };
+  },
+  methods: {
+    async submitForm() {
+      try {
+        const response = await axios.post('http://localhost:8080/api/v1/users/', this.userData);
+        console.log('Usuário cadastrado:', response.data);
+        // Reiniciar os campos após o cadastro
+        this.userData = {
+          name: '',
+          gender: '',
+          email: '',
+          phone: '',
+          address: '',
+          secret: '',
+          saldo: null,
+        };
+      } catch (error) {
+        console.error('Erro ao cadastrar usuário:', error);
+      }
+    },
+  },
+};
+</script>
+
+<style>
+/* Estilos opcionais para o formulário */
+form {
+  border: 1px solid #ccc;
+  padding: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+div {
+  margin-bottom: 10px;
+}
+</style>

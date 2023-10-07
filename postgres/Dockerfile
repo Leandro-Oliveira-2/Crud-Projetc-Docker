@@ -1,0 +1,9 @@
+FROM postgres:14.0-alpine   
+
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=124578pz
+ENV POSTGRES_DB=snet
+
+EXPOSE 5432
+
+

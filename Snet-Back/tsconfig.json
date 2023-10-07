@@ -1,0 +1,49 @@
+{
+   "compilerOptions": {
+     "target": "es2017",
+     "lib": [
+       "ES6"
+     ],
+     "experimentalDecorators": true,
+     "emitDecoratorMetadata": true,
+     "module": "commonjs",
+     "rootDir": "./src",
+     "baseUrl": ".",
+     "typeRoots": [
+       "./node_modules/@types",
+       "./src/@types"
+     ],
+     "resolveJsonModule": true,
+     "outDir": "./dist",
+     "removeComments": true,
+     "esModuleInterop": true,
+     "forceConsistentCasingInFileNames": true,
+     "strict": true,
+     "strictPropertyInitialization": true,
+     "skipLibCheck": true,
+     "paths": {
+       "@common/*": [
+         "./src/common/*"
+       ],
+       "@modules/*": [
+         "./src/modules/*"
+       ],
+       "@config/*": [
+         "./src/config/*"
+       ],
+       "@docs/*": [
+         "./src/docs/*"
+       ],
+       "@routes/*": [
+         "./src/modules/auth/infra/http/routes/*"
+       ],
+       "@entities/*": [
+         "./src/modules/user/infra/typeorm/entities/*"
+       ]
+     }
+   },
+   "include": [
+     "src/**/*"
+   ]
+ }
+ 

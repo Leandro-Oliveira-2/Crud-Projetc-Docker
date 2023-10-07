@@ -1,0 +1,33 @@
+version: '3'
+services:
+  postgres:
+    build: 
+      context: ./postgres
+    ports:
+      - "5430:5432"
+
+  back:
+    build:
+      context: ./Snet-Back
+    ports:
+      - "8081:8081"  
+    environment:
+      - DATABASE_TYPE=,
+      - DATABASE_HOST=postgres
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=124578pz
+      - DATABASE_DATABASE=snet
+      - DATABASE_PORT=5432
+      - DATABASE_LOGGING=false
+      - DATABASE_SSL=true
+    depends_on:
+      - postgres
+
+  front:
+    build: 
+      context: ./frontcrudproject
+    ports:
+      - '8080:8080'
+    depends_on:
+      - back
+
