@@ -21,7 +21,7 @@ Este projeto foi desenvolvido para fornecer uma solução versátil e escalável
 
 ## Instalação
 
--É necessário que você rode o comando docker-compose --build para que o docker crie as imagens e os containers necessários para o funcionamento do projeto.
+-É necessário que você rode o comando docker-compose up --build para que o docker monte as imagens e os containers necessários para o funcionamento do projeto.
 
 
 ## Como Executar o Projeto
