@@ -11,7 +11,6 @@ CREATE TABLE "user" (
 	CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id")
 );
 
-C:\Users\leand\OneDrive\Documentos\Trabalho\Snet\docker-image\Docker-Crud-Images
 CREATE TABLE "transations" (
 	"id" SMALLSERIAL NOT NULL,
 	"userId" smallint NOT NULL,
