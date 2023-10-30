@@ -1,6 +1,7 @@
 import Transations from "@modules/transations/infra/typeorm/entities/Transations";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Exclude} from "class-transformer";
+import { JsonObject } from "swagger-ui-express";
 
 @Entity('user')
 class User {
@@ -20,6 +21,9 @@ class User {
   @Column({ type: 'varchar', name: 'adress', length: 128})
   adress?: string;
 
+  @Column({ type: 'jsonb', name: 'fidelidade', default: { dia: 0, data: 0 } })
+  fidelidade?: JsonObject;
+
   @Column({ type: 'varchar', name: 'phone', length: 15})
   phone?: string; 
 
@@ -31,6 +35,9 @@ class User {
 
  @OneToMany(() => Transations, (transation) => transation.user, {cascade: true})
   transations?: Transations[]; 
+
+  @OneToMany(() => Transations, (transation) => transation.recepter, {cascade: true})
+  receivedTransfers?: Transations[]; 
     
 }
 

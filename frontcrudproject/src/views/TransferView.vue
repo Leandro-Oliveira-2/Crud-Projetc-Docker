@@ -1,9 +1,28 @@
 <template>
-  <nav-bar/>
   <div class="container-body">
     <div class="centered-container">
-      <h2 class="pb-2 border-bottom">Deposito</h2>
-      <form class="form" @submit.prevent="depositForm">
+      <h2 class="pb-2 border-bottom">Transferência</h2>
+      <form class="form" @submit.prevent="tranferencia">
+        <label class="label-input">
+          <i class="fas fa-lock icon-modify"></i>
+        </label>
+
+        <label class="label-input">
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            v-model="postData.userGetId"
+          >
+            <option value="" disabled selected>Selecione Um Usuário</option>
+            <option
+              v-for="usuario in usuarios"
+              :key="usuario.id"
+              :value="usuario.id"
+            >
+              {{ usuario.name }}
+            </option>
+          </select>
+        </label>
         <label class="label-input">
           <i class="far fa-envelope icon-modify"></i>
           <money3 v-model="postData.value" v-bind="moneyConfig" />
@@ -37,10 +56,9 @@
     </svg>
   </button>
 </template>
-
-<script>
+  
+  <script>
 import { Money3Component } from "v-money3";
-import navBar from "@/views/navBar.vue";
 import Alert from "@/utils/Alert";
 import request from "../utils/request";
 
@@ -48,19 +66,21 @@ const userComplite = JSON.parse(localStorage.getItem("Usuario"));
 const user = localStorage.getItem("UserId");
 
 export default {
-  name: "depositPage",
+  name: "transferPage",
   components: {
     VMoney3: Money3Component,
-    "nav-bar": navBar,
   },
   data() {
     return {
+      frutaSelecionada: "",
+      usuarios: [],
+      usuarioSelecionado: null,
       postData: {
-        userId: user,
-        transationType: "Deposito",
+        userPutId: Number(user),
+        userGetId: "",
+        transationType: "TRANSFERENCIA",
         description: "",
         value: "",
-        status: "Concluído",
       },
       moneyConfig: {
         decimal: ",",
@@ -73,18 +93,18 @@ export default {
     };
   },
   methods: {
-    async depositForm() {
+    async tranferencia() {
       this.postData.userId = parseInt(this.postData.userId);
       this.postData.value = parseFloat(this.postData.value);
 
       try {
         const response = await request(
-          `/transations/deposit`,
+          `/transations/transfer`,
           "POST",
           this.postData,
           userComplite.accessToken,
           (r) => {
-            Alert("Depósito Feito Com Sucesso!");
+            Alert(`Transferência realizada com sucesso`);
             this.postData.value = "";
             this.postData.description = "";
             const userAtualizado = JSON.parse(localStorage.getItem("Usuario"));
@@ -92,6 +112,10 @@ export default {
             localStorage.setItem("Usuario", JSON.stringify(userAtualizado));
           },
           (error) => {
+            if (error.response && error.response.status === 403) {
+              Alert("Saldo insuficiente!");
+            }
+
             if (error.response && error.response.status === 400) {
               Alert("Valor Inválido!");
             }
@@ -99,6 +123,26 @@ export default {
         );
       } catch (error) {
         Alert("Erro na transação!");
+      }
+    },
+    async listarUsers() {
+      window.scrollBy(0, -5000);
+      try {
+        const response = await request(
+          `/users/`,
+          "GET",
+          "",
+          userComplite.accessToken,
+          (r) => {
+            this.usuarios = [...r.data].sort(
+              (a, b) => parseInt(a.id) - parseInt(b.id)
+            )
+
+          }
+        );
+        this.usuarios = response.data;
+      } catch (error) {
+        console.error("Erro ao listar usuários", error.response);
       }
     },
     verificarUser() {
@@ -113,12 +157,22 @@ export default {
       this.$router.push({ name: "betting" });
     },
   },
+  mounted() {
+    this.listarUsers();
+  },
 };
 </script>
-
-<style>
+  
+  <style>
 .label-input {
   margin-block-end: 30px;
+}
+
+.form-select {
+  height: 45px;
+  width: 100%;
+  border: none;
+  background-color: #ecf0f1;
 }
 
 button.btn.btn-outline-light {

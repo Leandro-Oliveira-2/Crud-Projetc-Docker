@@ -79,6 +79,7 @@ class UserController {
     if (!req.auth.id) {
       throw new AppError("Not have Permission", 403);
     }
+    console.log(req.body)
     const data = await UpdateUserValidator.parseAsync(req.body).catch((err) => {
       throw new AppError(parseZodValidationError(err), StatusCodes.BAD_REQUEST);
     });

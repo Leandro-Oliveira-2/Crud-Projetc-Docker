@@ -11,6 +11,10 @@ interface IUserLoginResponse {
     gender?: string;
     adress?: string;
     phone?: string;
+    fidelidade?: {
+      data?: Date;
+      pontos?: number;
+    }
   };
 }
 

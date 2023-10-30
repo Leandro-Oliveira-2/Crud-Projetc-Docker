@@ -5,7 +5,7 @@
       <div class="row">
         <div id="myDiv" class="container">
           <div class="row">
-            <div class="col-12">
+            <div class="col-12-title">
               <h2>Tabela de Clientes</h2>
             </div>
             <div class="col-12">
@@ -35,11 +35,13 @@
                     <td>{{ usuario.name }}</td>
                     <td>{{ usuario.email }}</td>
                     <td>{{ usuario.adress }}</td>
+
                     <td>
                       {{
                         usuario.saldo
-                          ? usuario.saldo.toLocaleString("pt-BR", {
+                          ? Number(usuario.saldo).toLocaleString("pt-BR", {
                               minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
                             })
                           : "00,00"
                       }}
@@ -159,12 +161,12 @@ export default {
     verificarUser() {
       const verific = localStorage.getItem("Usuario");
 
-    if (verific === null) {
-      this.$router.push({ name: "about" });
-      setInterval(() => {
-        window.location.reload();
-      }, 100);
-    }
+      if (verific === null) {
+        this.$router.push({ name: "about" });
+        setInterval(() => {
+          window.location.reload();
+        }, 100);
+      }
       localStorage.setItem("entrei", 1);
 
       if (localStorage.getItem("userEdit") == 1) {
@@ -197,7 +199,7 @@ export default {
           `/users/filterByName?name=${pesquisa}`,
           "POST",
           {},
-          userComplite.accessToken  ,
+          userComplite.accessToken,
           (r) => {
             this.usuarios = [...r.data].sort(
               (a, b) => parseInt(a.id) - parseInt(b.id)
@@ -260,10 +262,12 @@ export default {
   margin-block-end: 15%;
 }
 
-h2 {
-  margin: 5% 32% 0;
-  margin-block-end: 5%;
+.col-12-title{
+  text-align: center;
+  margin-top: 3%;
 }
+
+
 
 .btn.btn-light {
   width: 120px;

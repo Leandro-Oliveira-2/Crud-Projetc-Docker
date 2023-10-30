@@ -114,6 +114,9 @@ export default {
         adress: "",
         secret: "",
         saldo: 0,
+        fidelidade: {
+        dia: 0,
+        }
       },
       activeContent: "signin",
     };
@@ -139,6 +142,9 @@ export default {
           adress: "",
           secret: "",
           saldo: 0,
+          fidelidade: {
+          dia: 0,
+          }
         };
         this.$router.push({ name: "home" });
       });

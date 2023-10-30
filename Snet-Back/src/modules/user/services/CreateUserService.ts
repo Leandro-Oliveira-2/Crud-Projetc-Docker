@@ -17,6 +17,8 @@ class CreateUserService {
   @inject(Types.UserRepository) private userRepository!: IUserRepository;
 
   public async execute({ data }: IRequest) {
+    
+   
     const user = {
       name: data.name,
       gender: data.gender.toString(),
@@ -24,6 +26,10 @@ class CreateUserService {
       phone: data.phone,
       adress: data.adress,
       saldo: data.saldo,
+      fidelidade: {
+        dia: data.fidelidade.dia,
+        data: new Date(),
+      },
       passwordHash: await argon2.hash(data.secret)
     }
     const userCreated = await this.userRepository.create(user);

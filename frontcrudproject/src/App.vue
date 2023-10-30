@@ -1,17 +1,18 @@
 <template>
-  <div>
-    <nav-bar/>
-    <router-view />
-  </div>
+  <v-app>
+    <v-main>
+      <router-view/>
+    </v-main>
+  </v-app>
 </template>
 
-
 <script>
+
 export default {
- 
-  name: "app",
-  components:{
-    
-  }
-};
+  name: 'App',
+
+  data: () => ({
+    //
+  }),
+}
 </script>

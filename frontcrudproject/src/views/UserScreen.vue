@@ -3,7 +3,7 @@
   <div class="container-fluid">
     <div class="row">
       <div id="myDiv" class="container col-12">
-        <h1>Tela de extratos</h1>
+        <h1 id="title">Tela de extratos</h1>
         <table class="table table-dark table-striped">
           <thead>
             <tr>
@@ -11,6 +11,7 @@
               <th class="date">Date</th>
               <th class="transaction">Transaction Type</th>
               <th class="description">Description</th>
+              <th class="status-remetente-destinatario">Remetente/Destinatário:</th> 
               <th class="value">Value</th>
             </tr>
           </thead>
@@ -20,6 +21,7 @@
               <td>{{ new Date(transacao.date).toLocaleString() }}</td>
               <td>{{ transacao.transationType }}</td>
               <td>{{ transacao.description }}</td>
+              <td>{{ transacao.recepterId !== undefined || transacao.transationType? "Operação de Conta": ""   }}</td>
               <td>
                 {{
                   transacao.value
@@ -99,9 +101,13 @@ export default {
           "",
           userComplite.accessToken,
           (r) => {
-            console.log(r)
+            console.log(r.data)
             this.transacoes = r.data;
-            Alert("usuário atualizado com Sucesso!");
+            let tranfer = this.transacoes.filter((usuario)=>{
+              return usuario.transationType == "Transferência"
+            })
+
+            console.log(tranfer)
           }
         );
       } catch (error) {
@@ -120,7 +126,13 @@ export default {
             this.transacoes = [...r.data].sort(
               (a, b) => parseInt(a.id) - parseInt(b.id)
             );
-            Alert("Todas as transações de !");
+            console.log(pesquisa)
+            if(pesquisa.length == 0){
+              document.getElementById("title").innerHTML = "Tela de extratos"
+            }else{
+              document.getElementById("title").innerHTML = "Extratos Filtrados por: ---" + pesquisa
+            }
+
           },
           (error) => {
             if (error.response && error.response.status === 403) {

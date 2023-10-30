@@ -9,6 +9,7 @@ transationRouter.post('/', [AuthMiddleware.required],transationController.create
 transationRouter.delete('/:id', [AuthMiddleware.required],transationController.delete);
 transationRouter.get('/', [AuthMiddleware.required],transationController.list);
 transationRouter.post('/deposit', [AuthMiddleware.required],transationController.deposit);
+transationRouter.post('/transfer', [AuthMiddleware.required],transationController.transfer);
 transationRouter.post('/saque', [AuthMiddleware.required],transationController.saque);
 transationRouter.get('/list/:id', [AuthMiddleware.required],transationController.userTransations);
 transationRouter.get('/list', [AuthMiddleware.required],transationController.list);

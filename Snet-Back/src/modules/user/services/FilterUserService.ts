@@ -31,6 +31,7 @@ class FilterUserService {
           phone: user.phone,
           address: user.adress, 
           saldo: user.saldo,
+          fidelidade: user.fidelidade,
           transations: user.transations?.map(transaction => ({
             id: transaction.id,
             userId: transaction.userId,

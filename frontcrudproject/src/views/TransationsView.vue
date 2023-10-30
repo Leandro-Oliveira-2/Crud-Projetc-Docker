@@ -3,14 +3,15 @@
       <div class="container-fluid">
         <div class="row">
           <div id="myDiv" class="container col-12">
-            <h1 id="Title-user" style="text-align: center;">Tela de extratos</h1>
+            <h1 id="Title-user" style="text-align: center;">Tela de extratos</h1>          
             <table class="table table-dark table-striped">
               <thead>
                 <tr>
                   <th class="id">id</th>
                   <th class="date">Date</th>
                   <th class="transaction">Transaction Type</th>
-                  <th class="description">Description</th>
+                  <th class="description">Description</th>  
+                  <th class="status-remetente-destinatario">Remetente/Destinatário:</th> 
                   <th class="value">Value</th>
                 </tr>
               </thead>
@@ -20,6 +21,7 @@
                   <td>{{ new Date(transacao.date).toLocaleString() }}</td>
                   <td>{{ transacao.transationType }}</td>
                   <td>{{ transacao.description }}</td>
+                  <td>{{ transacao.recepterId  }}</td>
                   <td>
                     {{
                       transacao.value
@@ -53,13 +55,13 @@
             </button>
           </div>
         </div>
+        
       </div>
       <footer-view />
     </template>
     
     
     <script>
-    import axios from "axios";
     import navBar from "@/views/navBar.vue";
     import request from "../utils/request";
     import footer from "../views/FooterView.vue";
@@ -99,8 +101,36 @@
               "",
               userComplite.accessToken,
               (r) => {
-                console.log(r.data.name)
-                this.transacoes = r.data.transations;
+                console.log(r.data)
+                r.data.receivedTransfers.forEach((element) => {
+                  element.recepterId = "Recebido"
+                });
+                this.transacoes = r.data.transations.concat(r.data.receivedTransfers).sort(
+              (a, b) => parseInt(a.id) - parseInt(b.id)
+            );;
+                console.log(this.transacoes)
+                this.transacoes.map((transacao)=>{
+                  console.log(transacao.transationType)
+                  
+                  if (transacao.transationType == "Deposito" || transacao.transationType == "deposito"){
+                    console.log("Entrei")
+                    transacao.recepterId = "Operação de Conta"
+                  }
+                  if (transacao.transationType == "Saque" || transacao.transationType == "saque"){
+                    transacao.recepterId = "Operação de Conta"
+                  }
+                  if (transacao.recepterId === "null"){
+                    transacao.recepterId = "Enviado"
+                  }
+
+                  if (transacao.recepterId === null){
+                    transacao.recepterId = "Recebido"
+                  }
+                  if (typeof transacao.recepterId == "number"){
+                    transacao.recepterId = "Enviado"
+                  }
+                })
+                console.log(this.transacoes)
                 document.getElementById("Title-user").innerHTML = "Extrato do Usuário: " + r.data.name;
                 
                 Alert("usuário atualizado com Sucesso!");

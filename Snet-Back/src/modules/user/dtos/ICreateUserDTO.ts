@@ -5,7 +5,11 @@ interface ICreateUserDTO {
   phone?: string;
   adress?: string;
   passwordHash?: string;
-  saldo:number;
+  saldo?:number;
+  fidelidade?: {
+    dia?: number;
+    data?: Date;
+  };
 }
 
 export default ICreateUserDTO;

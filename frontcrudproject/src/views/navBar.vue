@@ -40,6 +40,11 @@
               >Saque</router-link
             >
           </li>
+          <li class="nav-item">
+            <router-link to="transfers" class="nav-link" active-class="active"
+              >Transferência</router-link
+            >
+          </li>
 
           <form class="d-flex" @submit.prevent="filtrar">
             <input
@@ -58,10 +63,13 @@
               >Saldo:
               {{
                 saldo
-                  ? saldo.toLocaleString("pt-BR", { maximumFractionDigits: 2 })
+                  ? saldo.toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })
                   : "00,00"
               }}</a
-            >
+            >D
           </li>
           <li class="nav-item-sair">
             <router-link to="/" class="nav-link" active-class="active"
@@ -155,7 +163,7 @@ export default {
   width: 300px;
   height: 30px;
   margin-top: 7px;
-  margin-left: 40%;
+  margin-left: 45%;
   text-align: center;
   position: absolute;
 }

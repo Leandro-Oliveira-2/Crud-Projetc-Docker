@@ -18,7 +18,7 @@ class GetTransactionsUserService {
 
   public async execute({ id }: IRequest): Promise<IResponse | undefined> {
 
-    const transations = await this.userRepository.find({ id }, ['transations']);
+    const transations = await this.userRepository.find({ id }, ['transations', 'receivedTransfers']);
     if (!transations) {
       throw new AppError("Could not find transations", 404);
     }

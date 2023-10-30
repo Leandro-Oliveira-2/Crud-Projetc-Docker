@@ -7,7 +7,11 @@ const schema = Z.object({
   phone: Z.string().nonempty().max(20),
   adress: Z.string().max(128),
   secret: Z.string(),
-  saldo: Z.number()
+  saldo: Z.number(),
+  fidelidade: Z.object({
+    dia: Z.number().optional(),
+    data: Z.date().optional(),
+  }),
 });
 
 export default schema;

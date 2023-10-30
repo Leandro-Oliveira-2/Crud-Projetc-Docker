@@ -10,6 +10,9 @@ class Transations {
     @Column({ type: 'int', name: 'userId' })
     userId?: number;
 
+    @Column({ type: 'int', name: 'recepterId', nullable: true })
+    recepterId?: number;
+
     @Column({ type: 'timestamptz', name: 'date' })
     date?: Date;
 
@@ -28,5 +31,9 @@ class Transations {
     @ManyToOne(() => User, (user) => user.transations)
     @JoinColumn([{ name: 'userId', referencedColumnName: 'id' }])
     user?: User;
+
+    @ManyToOne(() => User, (user) => user.transations)
+    @JoinColumn([{ name: 'recepterId', referencedColumnName: 'id' }])
+    recepter?: User;
 }
 export default Transations

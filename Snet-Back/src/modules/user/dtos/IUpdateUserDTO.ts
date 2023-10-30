@@ -4,8 +4,13 @@ interface IUpdateUserDTO {
   email?: string;
   phone?: string;
   adress?: string;
-  saldo?: number
+  saldo?: number;
+  fidelidade?: {
+    dia?: number;
+    data?: Date ;
+  };
 }
 
 export default IUpdateUserDTO;
+
 

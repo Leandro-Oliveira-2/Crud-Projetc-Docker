@@ -6,6 +6,7 @@ import AppContainer from '@common/container';
 
 import CreateTransationValidator from '@modules/transations/infra/http/validators/CreateTransationValidators'
 import FilterUserValidator from '@modules/transations/infra/http/validators/FilterTransactionValidator'
+import TransferUserValirdator from '@modules/transations/infra/http/validators/TransferUserValirdator'
 import CreateTransationService from "@modules/transations/services/CreateTransationService";
 import DeleteUserService from "@modules/user/services/DeleteUserService";
 import DepositService from "@modules/transations/services/DepositService";
@@ -13,6 +14,7 @@ import WithdrawMoneyService from "@modules/transations/services/WithdrawMoneySer
 import ListTransationService from "@modules/transations/services/ListTransationService";
 import GetTransactionsUserService from "@modules/transations/services/GetTransactionsUserService";
 import FilterTransationService from "@modules/transations/services/FilterTransationService";
+import TransferUserService from "@modules/transations/services/TransferUserService";
 
 
 class TransationController {
@@ -44,6 +46,28 @@ class TransationController {
     const transation = await createTransation.execute({ data });
 
     return res.status(StatusCodes.CREATED).json(transation)
+  }
+
+  public async transfer(req: Request, res: Response): Promise<Response> {
+    try {
+      if (!req.auth.id) {
+        throw new AppError("Not have Permission", 403);
+      }
+  
+      const data = await TransferUserValirdator.parseAsync(req.body).catch((err) => {
+        throw new AppError(parseZodValidationError(err), StatusCodes.BAD_REQUEST);
+      });
+  
+      const createTransation = AppContainer.resolve<TransferUserService>(TransferUserService);
+      const transation = await createTransation.execute({ data });
+  
+      return res.status(StatusCodes.CREATED).json(transation);
+    } catch (error) {
+      if (error instanceof AppError) {
+        return res.status(error.statusCode).json({ status: 'error', message: error.message });
+      }
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ status: 'error', message: 'Internal Server Error' });
+    }
   }
 
   public async saque(req: Request, res: Response): Promise<Response> {
