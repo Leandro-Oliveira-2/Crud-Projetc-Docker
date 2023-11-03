@@ -115,15 +115,15 @@ export default {
         secret: "",
         saldo: 0,
         fidelidade: {
-        dia: 0,
-        }
+          dia: 0,
+        },
       },
       activeContent: "signin",
     };
   },
   methods: {
-    verificarUser(){
-      if(localStorage.getItem("userEdit") == 1 ){
+    verificarUser() {
+      if (localStorage.getItem("userEdit") == 1) {
         localStorage.clear();
         window.location.reload();
       }
@@ -131,23 +131,22 @@ export default {
     async cadastroForm() {
       try {
         request(`/users/`, "POST", this.userData, "", (r) => {
-       
-        Alert("usuário Criado com Sucesso!");
+          Alert("usuário Criado com Sucesso!");
 
-        this.userData = {
-          name: "",
-          gender: "",
-          email: "",
-          phone: "",
-          adress: "",
-          secret: "",
-          saldo: 0,
-          fidelidade: {
-          dia: 0,
-          }
-        };
-        this.$router.push({ name: "home" });
-      });
+          this.userData = {
+            name: "",
+            gender: "",
+            email: "",
+            phone: "",
+            adress: "",
+            secret: "",
+            saldo: 0,
+            fidelidade: {
+              dia: 0,
+            },
+          };
+          this.$router.push({ name: "home" });
+        });
       } catch (error) {
         Alert("Erro ao cadastrar usuário:", "red");
       }

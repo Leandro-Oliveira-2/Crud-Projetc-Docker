@@ -30,7 +30,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="usuario in usuarios" :key="usuario.id">
+                  <tr v-for="usuario in usuariosParaListar" :key="usuario.id">
                     <td>{{ usuario.id }}</td>
                     <td>{{ usuario.name }}</td>
                     <td>{{ usuario.email }}</td>
@@ -73,57 +73,86 @@
                               data-bs-target="#exampleModal"
                               v-on:click="alterIdUser(usuario.id)"
                             >
-                              Excluir</a
-                            >
+                              Excluir
+                            </a>
                           </li>
                         </ul>
-                        <div
-                          class="modal fade"
-                          id="exampleModal"
-                          tabindex="-1"
-                          aria-labelledby="exampleModalLabel"
-                          aria-hidden="true"
-                        >
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">
-                                  Excluir Usuário
-                                </h5>
-                                <button
-                                  type="button"
-                                  class="btn-close"
-                                  data-bs-dismiss="modal"
-                                  aria-label="Close"
-                                ></button>
-                              </div>
-                              <div class="modal-body">
-                                Você tem certeza que deseja excluir o usuário?
-                              </div>
-                              <div class="modal-footer">
-                                <button
-                                  type="button"
-                                  class="btn btn-secondary"
-                                  data-bs-dismiss="modal"
-                                >
-                                  Nâo
-                                </button>
-                                <button
-                                  type="button"
-                                  class="btn btn-primary"
-                                  v-on:click="excluirUsuario()"
-                                >
-                                  Tenho Certeza
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     </td>
                   </tr>
+
+                  <div
+                    class="modal fade"
+                    id="exampleModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                    ref="myModal"
+                  >
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" style="color: black">
+                            Excluir Usuário
+                          </h5>
+                          <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                          ></button>
+                        </div>
+                        <div class="modal-body" style="color: black">
+                          <p>Você tem certeza que deseja excluir o usuário?</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                          >
+                            Não
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-primary"
+                            v-on:click="excluirUsuario()"
+                          >
+                            Tenho Certeza
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </tbody>
               </table>
+              <nav aria-label="Page navigation example" class="pageNavigation">
+                <ul class="pagination">
+                  <li class="page-item" @click="paginaAnterior">
+                    <a class="page-link" href="#" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                  <li
+                    class="page-item"
+                    v-for="pagina in totalPaginas"
+                    :key="pagina"
+                    :class="{ active: pagina === paginaAtual }"
+                  >
+                    <a
+                      class="page-link"
+                      href="#"
+                      @click="irParaPagina(pagina)"
+                      >{{ pagina }}</a
+                    >
+                  </li>
+                  <li class="page-item" @click="proximaPagina">
+                    <a class="page-link" href="#" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>
@@ -139,6 +168,7 @@
 import navBar from "@/views/navBar.vue";
 import request from "../utils/request";
 import footer from "../views/FooterView.vue";
+import Alert from "@/utils/Alert";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 const userComplite = JSON.parse(localStorage.getItem("Usuario"));
 
@@ -155,6 +185,9 @@ export default {
       userIdExclude: 0,
       userId: localStorage.getItem("UserId"),
       transacoes: [], // Adicione esta linha
+      paginaAtual: 1,
+      usuariosDividos: [],
+      usuariosParaListar: [],
     };
   },
   methods: {
@@ -179,6 +212,13 @@ export default {
 
       const usuarioString = localStorage.getItem("Usuario");
       return (this.user = JSON.parse(usuarioString).user);
+    },
+    divisorList(array, size) {
+      const newArray = [];
+      for (let i = 0; i < array.length; i += size) {
+        newArray.push(array.slice(i, i + size));
+      }
+      return newArray;
     },
     editPag(user) {
       localStorage.setItem("userAlter", JSON.stringify(user));
@@ -223,6 +263,10 @@ export default {
             this.usuarios = [...r.data].sort(
               (a, b) => parseInt(a.id) - parseInt(b.id)
             );
+            
+            this.usuariosDividos = this.divisorList(this.usuarios, 10);
+            this.usuariosParaListar = this.usuariosDividos[this.paginaAtual - 1];
+            //if(this.paginaAtual == 1) return this.usuarios = this.usuariosDividos[0]// Inicializa com a primeira página
             Alert("usuário atualizado com Sucesso!");
           }
         );
@@ -231,8 +275,24 @@ export default {
         console.error("Erro ao listar usuários", error.response);
       }
     },
+    irParaPagina(pagina) {
+      console.log('pagina', pagina);
+      console.log('paginaAtual', this.paginaAtual);
+      console.log('usuariosDividos', this.usuariosDividos)
+      if(this.paginaAtual === pagina) return console.log('Já está na página atual');
+      this.usuariosParaListar = this.usuariosDividos[pagina - 1];
+      this.paginaAtual = pagina;
+    },
+    proximaPagina() {
+      if(this.paginaAtual === this.totalPaginas) return Alert('Já está na última página');
+      this.irParaPagina(this.paginaAtual + 1);
+
+    },
+    paginaAnterior() {
+      if(this.paginaAtual === 1) return Alert('Já está na primeira página');
+      this.irParaPagina(this.paginaAtual - 1);
+    },
     excluirUsuario() {
-      console.log(this.userIdExclude);
       try {
         request(
           `/users/${this.userIdExclude}`,
@@ -240,17 +300,26 @@ export default {
           {},
           userComplite.accessToken,
           (r) => {
+            console.log(r);
             Alert("usuário deletado com Sucesso!");
+            window.location.reload();
           }
         );
       } catch (error) {
-        console.error("Erro ao excluir usuário", error.response);
+        console.log(error);
+        Alert("Erro na Exclusão do Usuário!");
+        document.location.reload();
       }
     },
   },
   mounted() {
     this.listarUsers();
     this.verificarUser();
+  },
+  computed: {
+    totalPaginas() {
+      return Math.ceil(this.usuariosDividos.length );
+    },
   },
 };
 </script>
@@ -262,11 +331,10 @@ export default {
   margin-block-end: 15%;
 }
 
-.col-12-title{
+.col-12-title {
   text-align: center;
   margin-top: 3%;
 }
-
 
 
 .btn.btn-light {
@@ -298,6 +366,12 @@ export default {
   width: 900px;
   font-size: 0.8vw;
   position: relative;
+  margin-block-end: 5%;
+}
+
+.pageNavigation{
+  margin: -5% 12% 2px;
+  color: #f38989;
   margin-block-end: 5%;
 }
 
