@@ -31,7 +31,9 @@ class DepositService {
     if (!user) {
       throw new AppError("User not found", StatusCodes.NOT_FOUND);
     }
-
+    if (user.id !== data.userId) {  
+      throw new AppError("User not found", StatusCodes.NOT_FOUND);
+    }
 
     const novoSaldo = (user.saldo || 0) + data.value;
     if (novoSaldo < 0) {

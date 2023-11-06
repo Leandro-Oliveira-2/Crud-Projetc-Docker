@@ -15,7 +15,6 @@ class FilterTransationService{
     @inject(Types.TransationRepository) private transationRepository!: ITransationRepository;
   
     public async execute({data}: IRequest): Promise<IResponse[] | undefined> {
-        console.log(data);
         try{
             const transationsFound = await this.transationRepository.filterByname(data.name? data.name: '');
         

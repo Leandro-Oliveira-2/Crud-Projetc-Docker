@@ -1,4 +1,5 @@
 <template>
+  <nav-bar />
   <div class="container-body">
     <div class="centered-container">
       <h2 class="pb-2 border-bottom">Transferência</h2>
@@ -59,6 +60,7 @@
   
   <script>
 import { Money3Component } from "v-money3";
+import navBar from "@/views/navBar.vue";
 import Alert from "@/utils/Alert";
 import request from "../utils/request";
 
@@ -69,6 +71,7 @@ export default {
   name: "transferPage",
   components: {
     VMoney3: Money3Component,
+    "nav-bar": navBar,
   },
   data() {
     return {
@@ -116,12 +119,15 @@ export default {
               Alert("Saldo insuficiente!");
             }
 
+
+
             if (error.response && error.response.status === 400) {
-              Alert("Valor Inválido!");
+              Alert("Você não pode enviar para você mesmo!");
             }
           }
         );
       } catch (error) {
+       
         Alert("Erro na transação!");
       }
     },
@@ -136,8 +142,7 @@ export default {
           (r) => {
             this.usuarios = [...r.data].sort(
               (a, b) => parseInt(a.id) - parseInt(b.id)
-            )
-
+            );
           }
         );
         this.usuarios = response.data;

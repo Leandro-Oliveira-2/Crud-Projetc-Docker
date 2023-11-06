@@ -50,7 +50,8 @@
             <input
               type="text"
               v-model="userData.phone"
-              placeholder="Número de telefone"
+              @input="applyPhoneMask"
+              placeholder="Número de telefone"  
             />
           </label>
 
@@ -99,7 +100,6 @@
   
 <script>
 import request from "../utils/request";
-import axios from "axios";
 import Alert from "@/utils/Alert";
 
 export default {
@@ -127,6 +127,22 @@ export default {
         localStorage.clear();
         window.location.reload();
       }
+    },
+    applyPhoneMask(event) {
+      let value = event.target.value.replace(/\D/g, ""); // Remove todos os caracteres que não são dígitos
+      if (value.length > 11) {
+        value = value.slice(0, 11); // Limita o valor a 10 dígitos
+      }
+      if (value.length > 1){
+        value = value.replace(/^(\d{2})(\d)/g, "($1) $2"); // Coloca parênteses em volta dos dois primeiros dígitos
+      }
+      if (value.length > 6) {
+        value = value.replace(/(\d{5})(\d)/, "$1-$2"); // Coloca hífen entre o quinto e o sexto dígitos
+      }
+      event.target.value = value.replace(
+        /^(\d{2})(\d{5})(\d{4})$/,
+        "($1) $2-$3"
+      ); // Aplica a máscara (XX) XXXX-XXXX
     },
     async cadastroForm() {
       try {
@@ -159,6 +175,11 @@ export default {
   },
   mounted() {
     this.verificarUser();
+  },
+  computed: {
+    propriedadeCalculada() {
+      return Number(this.userData.phone) + 1;
+    },
   },
 };
 </script>

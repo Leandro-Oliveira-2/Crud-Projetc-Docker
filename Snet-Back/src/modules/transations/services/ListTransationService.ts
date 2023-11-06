@@ -11,7 +11,7 @@ class ListTransationService {
     
     public async execute(): Promise<IResponse[] | undefined> {
         const transations = await this.transationRepository.list({}, ['user', 'recepter']);
-
+        
         return transations.map(transations => {
             return {
                 id: transations.id,
@@ -22,7 +22,8 @@ class ListTransationService {
                 description: transations.description,
                 value: transations.value,
                 status: transations.status,
-                
+                user: transations.user,
+                recepter: transations.recepter
             }
         }) || [];
     }catch(){

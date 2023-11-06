@@ -49,7 +49,7 @@
                     <td>
                       <div class="dropdown">
                         <button
-                          class="btn btn-sm btn-light dropdown-toggle"
+                          class="btn btn-sm btn-light dropdown-toggle btn-sm"
                           type="button"
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
@@ -184,7 +184,7 @@ export default {
       user: {},
       userIdExclude: 0,
       userId: localStorage.getItem("UserId"),
-      transacoes: [], // Adicione esta linha
+      transacoes: [],
       paginaAtual: 1,
       usuariosDividos: [],
       usuariosParaListar: [],
@@ -263,33 +263,34 @@ export default {
             this.usuarios = [...r.data].sort(
               (a, b) => parseInt(a.id) - parseInt(b.id)
             );
-            
+
             this.usuariosDividos = this.divisorList(this.usuarios, 10);
-            this.usuariosParaListar = this.usuariosDividos[this.paginaAtual - 1];
+            this.usuariosParaListar =
+              this.usuariosDividos[this.paginaAtual - 1];
             //if(this.paginaAtual == 1) return this.usuarios = this.usuariosDividos[0]// Inicializa com a primeira página
             Alert("usuário atualizado com Sucesso!");
           }
         );
-        this.usuarios = response.data;
       } catch (error) {
         console.error("Erro ao listar usuários", error.response);
       }
     },
     irParaPagina(pagina) {
-      console.log('pagina', pagina);
-      console.log('paginaAtual', this.paginaAtual);
-      console.log('usuariosDividos', this.usuariosDividos)
-      if(this.paginaAtual === pagina) return console.log('Já está na página atual');
+      console.log("pagina", pagina);
+      console.log("paginaAtual", this.paginaAtual);
+      console.log("usuariosDividos", this.usuariosDividos);
+      if (this.paginaAtual === pagina)
+        return console.log("Já está na página atual");
       this.usuariosParaListar = this.usuariosDividos[pagina - 1];
       this.paginaAtual = pagina;
     },
     proximaPagina() {
-      if(this.paginaAtual === this.totalPaginas) return Alert('Já está na última página');
+      if (this.paginaAtual === this.totalPaginas)
+        return Alert("Já está na última página");
       this.irParaPagina(this.paginaAtual + 1);
-
     },
     paginaAnterior() {
-      if(this.paginaAtual === 1) return Alert('Já está na primeira página');
+      if (this.paginaAtual === 1) return Alert("Já está na primeira página");
       this.irParaPagina(this.paginaAtual - 1);
     },
     excluirUsuario() {
@@ -318,7 +319,7 @@ export default {
   },
   computed: {
     totalPaginas() {
-      return Math.ceil(this.usuariosDividos.length );
+      return Math.ceil(this.usuariosDividos.length);
     },
   },
 };
@@ -335,7 +336,6 @@ export default {
   text-align: center;
   margin-top: 3%;
 }
-
 
 .btn.btn-light {
   width: 120px;
@@ -356,7 +356,7 @@ export default {
   background-color: #89f3ac;
   height: auto;
   width: 100vw;
-  min-height: 700px;
+  min-height: 800px;
   overflow: visible;
   margin-block-end: -15%;
 }
@@ -369,14 +369,14 @@ export default {
   margin-block-end: 5%;
 }
 
-.pageNavigation{
-  margin: -5% 12% 2px;
+.pageNavigation {
+  margin: -5% 40% 2px;
   color: #f38989;
   margin-block-end: 5%;
 }
 
 .btn.btn-secondary.dropdown-toggle {
-  font-size: 1vw; /* Ajuste o tamanho da fonte conforme necessário */
+  font-size: 0.5vw; /* Ajuste o tamanho da fonte conforme necessário */
   text-align: center;
 }
 </style>

@@ -28,9 +28,6 @@ createConnection({
   console.log('Database connected sucessfully');
 }).catch((error) => {
   console.log(error)
-  console.log(databaseConfig.host)
-  console.log(databaseConfig.password)
-  console.log(databaseConfig.database)
-  console.log("tchauuuuu")
+
   console.log(`Could not connect to database with erro: ${error}`);
 });

@@ -1,5 +1,5 @@
 <template>
-  <nav-bar/>
+  <nav-bar />
   <div class="container-body">
     <div class="centered-container">
       <h2 class="pb-2 border-bottom">Deposito</h2>
@@ -76,7 +76,7 @@ export default {
     async depositForm() {
       this.postData.userId = parseInt(this.postData.userId);
       this.postData.value = parseFloat(this.postData.value);
-
+      
       try {
         const response = await request(
           `/transations/deposit`,

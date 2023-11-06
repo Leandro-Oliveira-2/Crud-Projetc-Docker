@@ -1,4 +1,5 @@
 <template>
+  <nav-bar />
   <div class="container-body">
     <div class="centered-container">
       <h2 class="pb-2 border-bottom">Saque</h2>
@@ -41,6 +42,7 @@
 import Alert from "@/utils/Alert";
 import request from "../utils/request";
 import { Money3Component } from "v-money3";
+import navBar from "@/views/navBar.vue";
 
 const userComplite = JSON.parse(localStorage.getItem("Usuario"));
 const user = localStorage.getItem("UserId");
@@ -49,6 +51,7 @@ export default {
   name: "saquePage",
   components: {
     VMoney3: Money3Component,
+    "nav-bar": navBar,
   },
   data() {
     return {
@@ -94,7 +97,6 @@ export default {
           }
         );
       } catch (error) {
-       
         Alert("Erro na transação!", error);
       }
     },

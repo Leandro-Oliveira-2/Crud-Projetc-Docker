@@ -1,5 +1,5 @@
 <template>
-<nav-bar @filtrar="filtrarUsuarios"/>
+  <nav-bar @filtrar="filtrarUsuarios" />
   <div class="container-fluid">
     <div class="row">
       <div id="myDiv" class="container col-12">
@@ -11,17 +11,25 @@
               <th class="date">Date</th>
               <th class="transaction">Transaction Type</th>
               <th class="description">Description</th>
-              <th class="status-remetente-destinatario">Remetente/Destinatário:</th> 
+              <th class="status-remetente-destinatario">
+                Remetente/Destinatário:
+              </th>
               <th class="value">Value</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="transacao in transacoes" :key="transacao.id">
+            <tr v-for="transacao in usuariosParaListar" :key="transacao.id">
               <td>{{ transacao.id }}</td>
               <td>{{ new Date(transacao.date).toLocaleString() }}</td>
               <td>{{ transacao.transationType }}</td>
               <td>{{ transacao.description }}</td>
-              <td>{{ transacao.recepterId !== undefined || transacao.transationType? "Operação de Conta": ""   }}</td>
+              <td>
+                {{
+                  transacao.recepterId !== undefined || transacao.transationType
+                    ? "Operação de Conta"
+                    : ""
+                }}
+              </td>
               <td>
                 {{
                   transacao.value
@@ -34,6 +42,30 @@
             </tr>
           </tbody>
         </table>
+        <nav aria-label="Page navigation example" class="pageNavigation">
+          <ul class="pagination">
+            <li class="page-item" @click="paginaAnterior">
+              <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <li
+              class="page-item"
+              v-for="pagina in totalPaginas"
+              :key="pagina"
+              :class="{ active: pagina === paginaAtual }"
+            >
+              <a class="page-link" href="#" @click="irParaPagina(pagina)">{{
+                pagina
+              }}</a>
+            </li>
+            <li class="page-item" @click="proximaPagina">
+              <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
         <button
           type="button"
           class="btn btn-outline-light"
@@ -61,9 +93,9 @@
 
 
 <script>
-import axios from "axios";
 import navBar from "@/views/navBar.vue";
 import request from "../utils/request";
+import Alert from "@/utils/Alert";
 import footer from "../views/FooterView.vue";
 const userComplite = JSON.parse(localStorage.getItem("Usuario"));
 export default {
@@ -71,18 +103,20 @@ export default {
     "nav-bar": navBar,
     "footer-view": footer,
   },
-  name: "betting",
+  name: "userScreen",
   data() {
     return {
       usuarios: [],
       user: {},
       userId: localStorage.getItem("UserId"),
-      transacoes: [], // Adicione esta linha
+      transacoes: [],
+      paginaAtual: 1,
+      usuariosDividos: [],
+      usuariosParaListar: [],
     };
   },
   methods: {
     verificarUser() {
-
       if (this.userId === null || this.userId == "") {
         this.$router.push({ name: "about" });
       }
@@ -92,8 +126,15 @@ export default {
         (this.user = JSON.parse(usuarioString).user), console.log(this.user)
       );
     },
+    divisorList(array, size) {
+      const newArray = [];
+      for (let i = 0; i < array.length; i += size) {
+        newArray.push(array.slice(i, i + size));
+      }
+      return newArray;
+    },
     async transacoesUser() {
-    window.scrollBy(0,-5000);
+      window.scrollBy(0, -5000);
       try {
         const response = await request(
           `/transations/`,
@@ -101,13 +142,14 @@ export default {
           "",
           userComplite.accessToken,
           (r) => {
-            console.log(r.data)
             this.transacoes = r.data;
-            let tranfer = this.transacoes.filter((usuario)=>{
-              return usuario.transationType == "Transferência"
-            })
-
-            console.log(tranfer)
+            let tranfer = this.transacoes.filter((usuario) => {
+              return usuario.transationType == "Transferência";
+            });
+            this.totalPaginas = Math.ceil(this.transacoes.length / 10);
+            this.usuariosDividos = this.divisorList(r.data, 10);
+            this.usuariosParaListar =
+              this.usuariosDividos[this.paginaAtual - 1];
           }
         );
       } catch (error) {
@@ -120,32 +162,48 @@ export default {
           `/transations/filterByName?name=${pesquisa}`,
           "POST",
           {},
-          userComplite.accessToken  ,
+          userComplite.accessToken,
           (r) => {
-            console.log(r.data)
             this.transacoes = [...r.data].sort(
               (a, b) => parseInt(a.id) - parseInt(b.id)
             );
-            console.log(pesquisa)
-            if(pesquisa.length == 0){
-              document.getElementById("title").innerHTML = "Tela de extratos"
-            }else{
-              document.getElementById("title").innerHTML = "Extratos Filtrados por: ---" + pesquisa
+            if (pesquisa.length == 0) {
+              document.getElementById("title").innerHTML = "Tela de extratos";
+            } else {
+              document.getElementById("title").innerHTML =
+                "Extratos Filtrados por:" + pesquisa;
             }
-
+            this.totalPaginas = Math.ceil(this.transacoes.length / 10);
+            this.usuariosDividos = this.divisorList(r.data, 10);
+            this.usuariosParaListar =
+              this.usuariosDividos[this.paginaAtual - 1];
           },
           (error) => {
             if (error.response && error.response.status === 403) {
-              Alert("Saldo não encontrado!");
+              Alert("Transações não encontradas!");
             }
           }
         );
       } catch (error) {
-       
         Alert("Erro na busca!", error);
       }
-    },  
-    
+    },
+    irParaPagina(pagina) {
+      if (this.paginaAtual === pagina)
+        return console.log("Já está na página atual");
+      this.usuariosParaListar = this.usuariosDividos[pagina - 1];
+      this.paginaAtual = pagina;
+    },
+    proximaPagina() {
+      if (this.paginaAtual === this.totalPaginas)
+        return Alert("Já está na última página");
+      this.irParaPagina(this.paginaAtual + 1);
+    },
+    paginaAnterior() {
+      if (this.paginaAtual === 1) return Alert("Já está na primeira página");
+      this.irParaPagina(this.paginaAtual - 1);
+    },
+
     mudarPag() {
       this.$router.push({ name: "betting" });
     },
@@ -164,7 +222,7 @@ export default {
   margin-block-end: 15%;
 }
 
-h1{
+h1 {
   margin: 5% 32% 15%;
   margin-block-end: 5%;
 }
@@ -180,7 +238,7 @@ h1{
   background-color: #89f3ac;
   height: auto;
   width: 100vw;
-  min-height: 700px;
+  min-height: 800px;
   overflow: visible;
   margin-block-end: -15%;
 }
@@ -188,6 +246,12 @@ h1{
 .nav-bar {
   background-color: aqua;
   font-size: small;
+}
+
+.pageNavigation {
+  margin: -5% -12% 2px;
+  color: #f38989;
+  margin-block-end: 5%;
 }
 
 .table.table-dark.table-striped {
@@ -198,7 +262,7 @@ h1{
   margin-block-end: 5%;
 }
 
-.btn.btn-outline-light{
+.btn.btn-outline-light {
   width: 100px;
   height: 50px;
   margin-top: 72%;

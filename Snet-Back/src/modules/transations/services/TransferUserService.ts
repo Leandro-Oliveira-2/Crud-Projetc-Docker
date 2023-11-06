@@ -25,7 +25,7 @@ class TransferUserService {
     public async execute({ data }: IRequest) {
 
         if (data.userGetId === data.userPutId) {
-            throw new AppError("You cannot transfer funds to yourself.");
+            throw new AppError("You cannot transfer funds to yourself.", StatusCodes.BAD_REQUEST);
         }
         
         const transationDate = new Date();
@@ -40,7 +40,6 @@ class TransferUserService {
             throw new AppError("User not found", StatusCodes.NOT_FOUND);
         }
         
-
         if (userPut.saldo !== undefined && userPut.saldo < data.value) {
             throw new AppError("Value is Insufficient", StatusCodes.FORBIDDEN)
         }

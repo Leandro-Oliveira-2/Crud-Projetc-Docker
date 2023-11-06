@@ -69,7 +69,7 @@
                     })
                   : "00,00"
               }}</a
-            >D
+            >
           </li>
           <li class="nav-item-sair">
             <router-link to="/" class="nav-link" active-class="active"

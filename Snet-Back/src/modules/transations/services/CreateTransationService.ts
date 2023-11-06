@@ -36,7 +36,7 @@ class CreateTransationService {
 
 
     const novoSaldo = (user.saldo || 0) + data.value;
-    console.log(data.value);
+
     if (novoSaldo < 0) {
       throw new AppError("Value is Insuficient", StatusCodes.FORBIDDEN)
     }
