@@ -11,11 +11,9 @@ interface IUpdateUserDTO {
     quantityRewards?: number;
     rewardDates?: string[] | Date[];
   };
-  saldoHistory?: {
-    datas?: string[] | Date[];
-    values?: number[];
-  };
   enabled?: boolean;
 }
 
 export default IUpdateUserDTO;
+
+

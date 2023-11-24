@@ -48,6 +48,11 @@ const routes = [
     path: '/transfers',
     name: 'transferPage',
     component: ()=> import('../views/TransferView.vue')
+  },
+  {
+    path: '/aboutUser',
+    name: 'aboutUser',
+    component: ()=> import('../views/AboutUserView.vue')
   }
 ]
 

@@ -16,15 +16,15 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <router-link to="betting" class="nav-link" active-class="active"
+            <router-link to="betting" v-if="this.userId == 1" class="nav-link" active-class="active" 
               >Clientes</router-link
             >
           </li>
-          <li class="nav-item">
-            <router-link to="userScreen" class="nav-link" active-class="active"
+       <!--    <li class="nav-item">
+            <router-link to="userScreen" v-if="this.userId == 1" class="nav-link" active-class="active"
               >Extrato</router-link
             >
-          </li>
+          </li> -->
           <li class="nav-item">
             <router-link to="transations" class="nav-link" active-class="active"
               >Seu Extrato</router-link
@@ -43,6 +43,11 @@
           <li class="nav-item">
             <router-link to="transfers" class="nav-link" active-class="active"
               >Transferência</router-link
+            >
+          </li>
+          <li class="nav-item">
+            <router-link to="aboutUser" class="nav-link" active-class="active"
+              >Informações</router-link
             >
           </li>
 
@@ -105,6 +110,10 @@ export default {
     };
   },
   methods: {
+    navigateTo(route) {
+      this.setEntreiLocalStorage();
+      this.$router.push(route);
+    },
     //get saldo
     async getSaldo() {
       console.log(this.userId)
@@ -116,6 +125,11 @@ export default {
           userComplite.accessToken,
           (r) => {
             this.saldo = r.data.saldo
+            localStorage.setItem("entrei", 1)
+            let user = localStorage.getItem("Usuario");
+            user.saldoHistory = r.data.saldoHistory;
+            localStorage.setItem("Usuario", JSON.stringify(user));
+            
           }
         );
       } catch (error) {

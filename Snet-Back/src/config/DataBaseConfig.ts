@@ -13,11 +13,11 @@ interface IDatabaseConfig {
 
 const databaseConfig: IDatabaseConfig = {
   type: 'postgres',
-  host: process.env.DATABASE_HOST || 'localhost',
+  host: process.env.DATABASE_HOST || 'viaduct.proxy.rlwy.net',
   username: process.env.DATABASE_USER || 'postgres',
-  password: process.env.DATABASE_PASSWORD || '124578pz',
-  database: process.env.DATABASE_DATABASE || 'snet',
-  port: Number(process.env.DATABASE_PORT || 5432),
+  password: process.env.DATABASE_PASSWORD || 'bcD6D5-E2Acd*g6*-GCBadbGaDgDdCca',
+  database: process.env.DATABASE_DATABASE || 'railway',
+  port: Number(process.env.DATABASE_PORT || 27484),
   logging: process.env.DATABASE_LOGGING === 'false',
   ssl: process.env.DATABASE_SSL === 'false',
 };

@@ -68,6 +68,15 @@
             <i class="fas fa-lock icon-modify"></i>
             <input
               type="password"
+              v-model="userData.senha"
+              placeholder="Senha"
+            />
+          </label>
+
+          <label class="label-input" for="">
+            <i class="fas fa-lock icon-modify"></i>
+            <input
+              type="password"
               v-model="userData.secret"
               placeholder="Confirme a senha"
             />
@@ -112,6 +121,7 @@ export default {
         email: "",
         phone: "",
         adress: "",
+        senha: "",
         secret: "",
         saldo: 0,
         fidelidade: {
@@ -145,6 +155,11 @@ export default {
       ); // Aplica a máscara (XX) XXXX-XXXX
     },
     async cadastroForm() {
+      if( this.userData.senha != this.userData.secret){
+        Alert("As senhas não coincidem!", "red");
+        return;
+      }
+
       try {
         request(`/users/`, "POST", this.userData, "", (r) => {
           Alert("usuário Criado com Sucesso!");
@@ -160,6 +175,7 @@ export default {
             fidelidade: {
               dia: 0,
             },
+            anebled: true,
           };
           this.$router.push({ name: "home" });
         });
@@ -191,6 +207,8 @@ input:focus {
   outline: none;
 }
 
+
+
 * {
   margin: 0;
   padding: 0;
@@ -204,11 +222,17 @@ body {
   flex-direction: column; /* Alinhar o conteúdo verticalmente */
   justify-content: center; /* Centralizar verticalmente */
   align-items: center; /* Centralizar horizontalmente */
-  background-color: #89f3ac;
+ background-image: linear-gradient(
+    315deg,
+    rgb(243, 162, 137) 0%,
+    #77a4e0 74%,
+    #59c9a8 100%
+  ); 
   height: 100vh; /* Ocupar toda a altura da tela */
   width: 100vw; /* Ocupar toda a largura da tela */
-  overflow: hidden; /* Evitar que o conteúdo ultrapasse a tela */
+
 }
+
 
 .custom-select {
   outline: none;
@@ -278,15 +302,16 @@ body {
 .title {
   font-size: 28px;
   font-weight: bold;
-  text-transform: capitalize;
+  margin-block-end: -15px;
+  text-align: center;
+  margin-top: 2px;
 }
 .title-primary {
   color: #fff;
 }
+
 .title-second {
-  margin-top: -10%;
   color: #58af9b;
-  padding-block-end: 30px;
 }
 .description {
   font-size: 14px;

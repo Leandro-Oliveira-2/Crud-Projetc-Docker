@@ -6,6 +6,12 @@ interface IListUserResponse {
   phone?: string;
   adress?: string;
   saldo?: number;
+  fidelidade?: {
+    dia?: number;
+    data?: Date;
+    quantityRewards?: number;
+    rewardDates?: Date[];
+  };
   transations?:{
     id?: number;
     userId?: number;

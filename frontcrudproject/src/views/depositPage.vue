@@ -110,6 +110,7 @@ export default {
       }
     },
     mudarPag() {
+      localStorage.setItem("entrei", 1);
       this.$router.push({ name: "betting" });
     },
   },
@@ -131,7 +132,12 @@ button.btn.btn-outline-light {
 .container-body {
   width: 100vw;
   height: 100vh;
-  background-color: #b9e2c7;
+  background-image: linear-gradient(
+    315deg,
+    rgb(243, 162, 137) 0%,
+    #77a4e0 74%,
+    #59c9a8 100%
+  ); 
   display: flex;
   justify-content: center;
   align-items: center;

@@ -20,7 +20,7 @@ class DeleteUserService {
         if (!user) {
             throw new AppError("Could not find user", 404);
         }
-        return await this.userRepository.delete(id);
+        return await this.userRepository.update(user, { enabled: false });
     }
 }
 

@@ -115,6 +115,11 @@ export default {
         this.$router.push({ name: "about" });
       }
 
+      if (this.verification == 1) {
+        localStorage.setItem("entrei", 0);
+        window.location.reload();
+      }
+
       const usuarioString = localStorage.getItem("Usuario");
       return (
         (this.user = JSON.parse(usuarioString).user), console.log(this.user)
@@ -128,7 +133,13 @@ export default {
       return newArray;
     },
     async transacoesUser() {
+      let verificacao = localStorage.getItem("entrei");
+      if (verificacao == 1) {
+        localStorage.setItem("entrei", 0);
+        window.location.reload();
+      }
       window.scrollBy(0, -5000);
+      localStorage.setItem("userEdit", 1);
       try {
         const response = await request(
           `/transations/list/${this.userId}`,
@@ -137,19 +148,22 @@ export default {
           userComplite.accessToken,
           (r) => {
             console.log(r.data);
-            console.log(r)
-            r.data.receivedTransfers.forEach((element) => {
-            });
+            console.log(r);
+            r.data.receivedTransfers.forEach((element) => {});
             this.transacoes = r.data.transations
               .concat(r.data.receivedTransfers)
               .sort((a, b) => parseInt(a.id) - parseInt(b.id));
             this.transacoes.map((transacao) => {
               if (
-                transacao.transationType == "Deposito" ||transacao.transationType == "deposito"){
+                transacao.transationType == "Deposito" ||
+                transacao.transationType == "deposito"
+              ) {
                 transacao.recepterId = "Operação de Conta";
               }
               if (
-                transacao.transationType == "Saque" || transacao.transationType == "saque") {
+                transacao.transationType == "Saque" ||
+                transacao.transationType == "saque"
+              ) {
                 transacao.recepterId = "Operação de Conta";
               }
 
@@ -165,7 +179,7 @@ export default {
                 transacao.recepterId = "Enviado";
               }
             });
-            console.log(this.transacoes );
+            console.log(this.transacoes);
             this.totalPaginas = Math.ceil(this.transacoes.length / 10);
             this.usuariosDividos = this.divisorList(this.transacoes, 10);
             this.usuariosParaListar =
@@ -250,12 +264,16 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #89f3ac;
+  background-image: linear-gradient(
+    315deg,
+    rgb(243, 162, 137) 0%,
+    #77a4e0 74%,
+    #59c9a8 100%
+  );
   height: auto;
   width: 100vw;
   min-height: 800px;
   overflow: visible;
-  margin-block-end: -15%;
 }
 
 .nav-bar {
@@ -264,7 +282,7 @@ h1 {
 }
 
 .pageNavigation {
-  margin: -5% -12% 2px;
+  margin: -5% 45% 2px;
   color: #f38989;
   margin-block-end: 5%;
 }

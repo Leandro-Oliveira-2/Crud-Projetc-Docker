@@ -134,6 +134,10 @@ export default {
       return newArray;
     },
     async transacoesUser() {
+      if(this.verification == 1){
+        localStorage.setItem("entrei", 0);
+        window.location.reload();
+      }
       window.scrollBy(0, -5000);
       try {
         const response = await request(
@@ -235,12 +239,16 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #89f3ac;
+  background-image: linear-gradient(
+    315deg,
+    rgb(243, 162, 137) 0%,
+    #77a4e0 74%,
+    #59c9a8 100%
+  ); 
   height: auto;
   width: 100vw;
   min-height: 800px;
   overflow: visible;
-  margin-block-end: -15%;
 }
 
 .nav-bar {
@@ -249,7 +257,7 @@ h1 {
 }
 
 .pageNavigation {
-  margin: -5% -12% 2px;
+  margin: -5% 45% 2px;
   color: #f38989;
   margin-block-end: 5%;
 }

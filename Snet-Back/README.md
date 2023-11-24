@@ -24,7 +24,7 @@ git clone https://github.com/Leandro-Oliveira-2/Back-Crud-Project.git
 3. Instale as dependências:
 - npm install
 
-## Executando o Projeto
+## Executando o Projetor
 - Para iniciar o projeto, utilize o comando: 
    npm run run:dev 
 

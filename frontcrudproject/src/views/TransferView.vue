@@ -133,6 +133,10 @@ export default {
     },
     async listarUsers() {
       window.scrollBy(0, -5000);
+      if(this.verification == 1){
+        localStorage.setItem("entrei", 0);
+        window.location.reload();
+      }
       try {
         const response = await request(
           `/users/`,
@@ -140,7 +144,7 @@ export default {
           "",
           userComplite.accessToken,
           (r) => {
-            this.usuarios = [...r.data].sort(
+            this.usuarios = [...r.data.filter(user => user.id !== this.postData.userPutId)].sort(
               (a, b) => parseInt(a.id) - parseInt(b.id)
             );
           }
@@ -190,7 +194,12 @@ button.btn.btn-outline-light {
 .container-body {
   width: 100vw;
   height: 100vh;
-  background-color: #b9e2c7;
+  background-image: linear-gradient(
+    315deg,
+    rgb(243, 162, 137) 0%,
+    #77a4e0 74%,
+    #59c9a8 100%
+  ); 
   display: flex;
   justify-content: center;
   align-items: center;

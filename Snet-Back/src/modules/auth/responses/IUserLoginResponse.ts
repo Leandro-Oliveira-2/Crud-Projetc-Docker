@@ -14,6 +14,10 @@ interface IUserLoginResponse {
     fidelidade?: {
       data?: Date;
       pontos?: number;
+    },
+    saldoHistory?:{
+      datas?: Date[];
+      values?: number[];
     }
   };
 }

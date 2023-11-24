@@ -20,18 +20,18 @@ class UpdateUserService {
   @inject(Types.UserRepository) private userRepository!: IUserRepository;
 
   public async execute({ userId, data }: IRequest) {
-  
 
+    
     const user = await this.userRepository.find({ id: userId });
     if (!user) {
       throw new AppError("Could not find user", 404);
     }
 
     if (data.fidelidade) {
-      // Atualize o objeto "fidelidade" no usuário
-        data.fidelidade.data = new Date();
+      // Atualiza o objeto "fidelidade" no usuário
+      data.fidelidade.data = new Date().toISOString();
     }
-
+    
     return this.userRepository.update(user, data);
   }
 }

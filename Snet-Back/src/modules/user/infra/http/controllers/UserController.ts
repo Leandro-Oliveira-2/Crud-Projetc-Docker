@@ -16,6 +16,7 @@ import DeleteUserService from "@modules/user/services/DeleteUserService";
 import ListUserService from "@modules/user/services/ListUserService";
 import UpdateUserService from "@modules/user/services/UpdateUserService";
 import FilterUserService from "@modules/user/services/FilterUserService";
+import WeeklyBalanceHistoryService from "@modules/WeeklyBalanceHistory/WeeklyBalanceHistoryService ";
 
 
 class UserController {
@@ -86,6 +87,14 @@ class UserController {
     const userId = +req.params.userId;
     const updateUser = AppContainer.resolve<UpdateUserService>(UpdateUserService);
     await updateUser.execute({ userId, data });
+
+    return res.status(StatusCodes.NO_CONTENT).json();
+  }
+
+  public async WeeklyBalanceHistory(req: Request, res: Response): Promise<Response> {
+
+    const WeeklyBalanceHistory = AppContainer.resolve<WeeklyBalanceHistoryService>(WeeklyBalanceHistoryService);
+    await WeeklyBalanceHistory.execute({});
 
     return res.status(StatusCodes.NO_CONTENT).json();
   }

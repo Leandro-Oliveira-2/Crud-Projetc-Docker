@@ -31,7 +31,6 @@ footer {
   height: 120px;
   width: 100%; /* Para ocupar toda a largura */
   background-color: aliceblue;
-  margin-top: 15%;
 
   position: fixed;
 }

@@ -48,7 +48,8 @@ class LoginService {
         gender: user.gender,
         phone: user.phone,
         adress: user.adress,
-        fidelidade: user.fidelidade
+        fidelidade: user.fidelidade,
+        saldoHistory: user.saldoHistory,
       },
     };
   }
