@@ -252,7 +252,7 @@ export default {
 }
 
 h1 {
-  margin: 5% 32% 15%;
+  margin: -5% 10% 5%;
   margin-block-end: 5%;
 }
 
@@ -272,7 +272,7 @@ h1 {
   );
   height: auto;
   width: 100vw;
-  min-height: 800px;
+  min-height: 910px;
   overflow: visible;
 }
 
@@ -303,4 +303,6 @@ h1 {
   position: absolute;
   text-align: center;
 }
+
+
 </style>

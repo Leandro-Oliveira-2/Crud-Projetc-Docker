@@ -77,12 +77,14 @@
             </thead>
             <tbody>
               <tr v-for="usuario in usuariosParaListar2" :key="usuario.id">
-                <td>#</td>
+                <td> {{usuario.id}}</td>
                 <td>{{ usuario.datas }}</td>
                 <td>
-                  {{ usuario.values.toLocaleString("pt-BR", {
-                    minimumFractionDigits: 2,
-                  }) }}
+                  {{
+                    usuario.values.toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    })
+                  }}
                 </td>
               </tr>
             </tbody>
@@ -124,6 +126,7 @@ import FooterView from "./FooterView.vue";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Alert from "@/utils/Alert";
 import { Money3Component } from "v-money3";
+import request from "../utils/request";
 
 export default {
   components: {
@@ -137,9 +140,11 @@ export default {
       userGet: JSON.parse(localStorage.getItem("Usuario")),
       verification: localStorage.getItem("entrei"),
       userForList: [],
+      userForList2: [],
       userForListInHystory: [],
       paginaAtual: 1,
       paginaAtual2: 1,
+      variavelFuncional: [],
       usuariosDividos: [],
       usuariosDividos2: [],
       usuariosParaListar: [],
@@ -156,52 +161,15 @@ export default {
   },
   methods: {
     async getUser() {
-      if(this.verification == 1){
+      if (this.verification == 1) {
         localStorage.setItem("entrei", 0);
         window.location.reload();
       }
 
       let list = [];
       let inteirador = 0;
-      let list2 = [];
-      let inteirador2 = 0;
 
-      // Verifica se saldoHistory é um array antes de iterar sobre ele
-      if (Array.isArray(this.userGet.user.saldoHistory.values)) {
-        const datas = this.userGet.user.saldoHistory.datas;
-        const values = this.userGet.user.saldoHistory.values;
 
-        // Certifica-se de que datas e values tenham o mesmo comprimento
-        if (datas.length === values.length) {
-          for (let i = 0; i < datas.length; i++) {
-            // Formate o valor aqui antes de adicioná-lo ao novo objeto
-            const formattedValue = values[i].toLocaleString("pt-BR", {
-              minimumFractionDigits: 2,
-            });
-            console.log(formattedValue)
-            const novoObjeto = {
-              id: inteirador2++,
-              datas: `${datas[i].split("-")[2].slice(0, 2)}/${
-                datas[i].split("-")[1]
-              }/${datas[i].split("-")[0]}`,
-              values: formattedValue,
-            };
-            list2.push(novoObjeto);
-          }
-
-          this.usuariosDividos2 = this.divisorList(list2, 7);
-          this.usuariosParaListar2 =
-            this.usuariosDividos2[this.paginaAtual2 - 1];
-        } else {
-          console.error("Datas e values não têm o mesmo comprimento");
-          // Lida com a situação em que datas e values não têm o mesmo comprimento, se necessário.
-        }
-      } else {
-        console.error("this.userGet.user.saldoHistory.values não é um array");
-        // Lida com a situação em que values não é um array, se necessário.
-      }
-
-      console.log(this.userForListInHystory);
       this.userForList = this.userGet.user.fidelidade.rewardDates;
       this.userForList.forEach((element) => {
         const novoObjeto = {
@@ -216,11 +184,40 @@ export default {
         console.log(this.usuariosDividos);
         this.usuariosParaListar = this.usuariosDividos[this.paginaAtual - 1];
       });
-
-      let data = this.userForList[0].dataFormatada;
-      console.log(this.userForList);
     },
+    getUserExtract(){
+      let list2 = [];
+       request(`/userExtract/${this.userGet.user.id}`, "GET", "", "", (r) => {
+        console.log(r.data)
+        for (var i = 0; i < r.data.length; i++) {
+          const novoObjeto2 = {
+            id: r.data[i].id, // Corrigido aqui
+            datas: `${r.data[i].dateOfAtualization.split("-")[2].slice(0, 2)}/${
+              r.data[i].dateOfAtualization.split("-")[1]
+            }/${r.data[i].dateOfAtualization.split("-")[0]}`,
+            values: r.data[i].valueOfTheDay,
+          };
+          list2.push(novoObjeto2);
+        }
+        this.usuariosDividos2 = this.divisorList(list2, 7);
+        this.usuariosParaListar2 = this.usuariosDividos2[this.paginaAtual2 - 1];
+      });
 
+      console.log(this.userForList2);
+
+    },
+    formatarDados(dados) {
+      // Função para formatar os dados recebidos da requisição
+      return dados.map((item) => ({
+        id: item.id,
+        dateOfAtualization: `${item.dateOfAtualization.split("-")[2].slice(0, 2)}/${
+          item.dateOfAtualization.split("-")[1]
+        }/${item.dateOfAtualization.split("-")[0]}`,
+        valueOfTheDay: item.valueOfTheDay.toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+        }),
+      }));
+    },
     divisorList(array, size) {
       const newArray = [];
       for (let i = 0; i < array.length; i += size) {
@@ -256,11 +253,12 @@ export default {
     },
     paginaAnterior2() {
       if (this.paginaAtual2 === 1) return Alert("Já está na primeira página");
-      this.irParaPagina2(this.paginaAtual2 - 1);
+      this.irParaPagina(this.paginaAtual2 - 1);
     },
   },
   mounted() {
     this.getUser();
+    this.getUserExtract();
   },
   computed: {
     totalPaginas() {

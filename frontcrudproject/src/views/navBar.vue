@@ -20,11 +20,11 @@
               >Clientes</router-link
             >
           </li>
-       <!--    <li class="nav-item">
+      <!--     <li class="nav-item">
             <router-link to="userScreen" v-if="this.userId == 1" class="nav-link" active-class="active"
               >Extrato</router-link
             >
-          </li> -->
+          </li>  -->
           <li class="nav-item">
             <router-link to="transations" class="nav-link" active-class="active"
               >Seu Extrato</router-link
@@ -177,7 +177,7 @@ export default {
   width: 300px;
   height: 30px;
   margin-top: 7px;
-  margin-left: 45%;
+  margin-left: 50%;
   text-align: center;
   position: absolute;
 }

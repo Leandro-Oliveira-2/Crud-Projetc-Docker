@@ -1,4 +1,5 @@
 import Transations from "@modules/transations/infra/typeorm/entities/Transations";
+import Extracts from "@modules/userExtract/infra/typeorm/entities/UserExtract";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Exclude} from "class-transformer";
 import { JsonObject } from "swagger-ui-express";
@@ -42,6 +43,9 @@ class User {
 
  @OneToMany(() => Transations, (transation) => transation.user, {cascade: true})
   transations?: Transations[]; 
+
+  @OneToMany(() => Extracts, (extract) => extract.user, {cascade: true})
+  extracts?: Extracts[]; 
 
   @OneToMany(() => Transations, (transation) => transation.recepter, {cascade: true})
   receivedTransfers?: Transations[]; 

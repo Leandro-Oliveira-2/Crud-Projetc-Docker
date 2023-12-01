@@ -12,5 +12,5 @@ userRouter.get('/', [AuthMiddleware.required], userController.list);
 userRouter.patch('/:userId', [AuthMiddleware.required], userController.update);
 userRouter.post('/filterByName',  [AuthMiddleware.required],userController.filter);
 userRouter.post('/AlterChach', userController.WeeklyBalanceHistory);
-
+userRouter.post('/calculatorCash', userController.CalculatorCash);
 export default userRouter;

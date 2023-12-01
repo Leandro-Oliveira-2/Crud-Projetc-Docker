@@ -17,6 +17,7 @@ import ListUserService from "@modules/user/services/ListUserService";
 import UpdateUserService from "@modules/user/services/UpdateUserService";
 import FilterUserService from "@modules/user/services/FilterUserService";
 import WeeklyBalanceHistoryService from "@modules/WeeklyBalanceHistory/WeeklyBalanceHistoryService ";
+import calculatorCashService from "@modules/user/services/calculatorCashService";
 
 
 class UserController {
@@ -52,14 +53,14 @@ class UserController {
     return res.status(200).json(instanceToPlain(user));
   }
 
-  public async filter(req:Request, res:Response): Promise<Response> {
+  public async filter(req: Request, res: Response): Promise<Response> {
     if (!req.auth.id) {
       throw new AppError("Not have Permission", 403);
     }
     const data = await FilterUserValidator.parseAsync(req.query).catch((err) => {
       throw new AppError(parseZodValidationError(err), StatusCodes.BAD_REQUEST);
     });
-    
+
     const filterUsers = AppContainer.resolve<FilterUserService>(FilterUserService);
     const user = await filterUsers.execute({ data });
 
@@ -99,6 +100,23 @@ class UserController {
     return res.status(StatusCodes.NO_CONTENT).json();
   }
 
+  public async CalculatorCash(req: Request, res: Response): Promise<Response> {
+    try {
+      const { id, quantidadeDias } = req.body; // Certifique-se de que o corpo da solicitação tenha esses campos
+      const calculatorCash = AppContainer.resolve<calculatorCashService>(calculatorCashService);
+      const result = await calculatorCash.execute({ id, quantidadeDias });
+
+      return res.status(StatusCodes.OK).json(result);
+    } catch (error) {
+      if (error instanceof AppError) {
+        return res.status(error.statusCode).json({ message: error.message });
+      }
+
+      // Trate outros tipos de erros conforme necessário
+      console.error(error);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal Server Error' });
+    }
+  }
 }
 
 export default UserController
