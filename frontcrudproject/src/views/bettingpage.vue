@@ -7,7 +7,7 @@
         <div id="myDiv" class="container">
           <div class="row">
             <div class="col-12-title">
-              <h2>Tabela de Clientes</h2>
+              <h1 id="title">Tabela de Cliente</h1>
             </div>
             <div class="col-12">
               <button
@@ -267,22 +267,37 @@ export default {
       localStorage.setItem("userEdit", 1);
       this.$router.push({ name: "about" });
     },
-    filtrarUsuarios(pesquisa) {
+    async filtrarUsuarios(pesquisa) {
+      console.log("Olá")
       try {
-        const response = request(
+        await request(
           `/users/filterByName?name=${pesquisa}`,
           "POST",
           {},
           userComplite.accessToken,
           (r) => {
-            this.usuarios = [...r.data].sort(
+            this.transacoes = [...r.data].sort(
               (a, b) => parseInt(a.id) - parseInt(b.id)
             );
-            Alert("usuário atualizado com Sucesso!");
+            if (pesquisa.length == 0) {
+              document.getElementById("title").innerHTML = "Tabela de Clientes";
+            } else {
+              document.getElementById("title").innerHTML =
+                "Extratos Filtrados por:" + pesquisa;
+            }
+            this.totalPaginas = Math.ceil(this.transacoes.length / 10);
+            this.usuariosDividos = this.divisorList(r.data, 10);
+            this.usuariosParaListar =
+              this.usuariosDividos[this.paginaAtual - 1];
+          },
+          (error) => {
+            if (error.response && error.response.status === 403) {
+              Alert("Transações não encontradas!");
+            }
           }
         );
       } catch (error) {
-        alert("Usuário não encontrado");
+        Alert("Erro na busca!", error);
       }
     },
     async handleDeposito() {},

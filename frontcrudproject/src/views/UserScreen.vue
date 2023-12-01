@@ -247,7 +247,7 @@ h1 {
   ); 
   height: auto;
   width: 100vw;
-  min-height: 800px;
+  min-height: 910px;
   overflow: visible;
 }
 

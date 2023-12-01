@@ -20,11 +20,11 @@
               >Clientes</router-link
             >
           </li>
-      <!--     <li class="nav-item">
+     <li class="nav-item">
             <router-link to="userScreen" v-if="this.userId == 1" class="nav-link" active-class="active"
               >Extrato</router-link
             >
-          </li>  -->
+          </li> 
           <li class="nav-item">
             <router-link to="transations" class="nav-link" active-class="active"
               >Seu Extrato</router-link
